@@ -3,288 +3,65 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>UTD Career Agent</title>
-  <style>
-    :root { --bg:#0b1020; --card:#121a33; --muted:#8ea0c7; --text:#e9eeff; --border:#253058; }
-    * { box-sizing: border-box; }
-    body {
-    margin: 0;
-    font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-
-    /* Background image */
-    background:
-        linear-gradient(
-        rgba(11,16,32,0.85),
-        rgba(11,16,32,0.85)
-        ),
-        url("campus.jpg");
-
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-
-    color: var(--text);
-    }
-
-    .wrap { max-width: 980px; margin: 0 auto; padding: 24px 16px; }
-    .header { display:flex; gap:12px; align-items:center; justify-content:space-between; flex-wrap:wrap; }
-    .title { display:flex; flex-direction:column; gap:4px; }
-    h1 { font-size: 20px; margin:0; }
-    .sub { color: var(--muted); font-size: 13px; }
-    .card {
-      margin-top: 16px;
-      background: rgba(18,26,51,.85);
-      border: 1px solid rgba(37,48,88,.8);
-      border-radius: 16px;
-      box-shadow: 0 12px 36px rgba(0,0,0,.35);
-      overflow:hidden;
-    }
-    .bar {
-      display:flex; gap:10px; padding:12px;
-      border-bottom: 1px solid rgba(37,48,88,.8);
-      align-items:center; flex-wrap:wrap;
-      justify-content: space-between;
-    }
-    .btn {
-      padding:10px 12px; border-radius: 12px;
-      border: 1px solid rgba(37,48,88,.9);
-      background: rgba(255,255,255,.06);
-      color: var(--text);
-      cursor:pointer;
-    }
-    .btn:hover { background: rgba(255,255,255,.10); }
-    .btn.primary { background: rgba(95,139,255,.18); border-color: rgba(95,139,255,.45); }
-    .btn.primary:hover { background: rgba(95,139,255,.26); }
-    .chat {
-      height: 62vh;
-      padding: 16px;
-      overflow:auto;
-    }
-    .msg { display:flex; margin: 10px 0; }
-    .bubble {
-      max-width: 78%;
-      padding: 10px 12px;
-      border-radius: 14px;
-      border: 1px solid rgba(37,48,88,.7);
-      background: rgba(11,16,32,.55);
-      line-height: 1.35;
-      white-space: pre-wrap;
-      word-wrap: break-word;
-    }
-    .me { justify-content:flex-end; }
-    .me .bubble { background: rgba(95,139,255,.18); border-color: rgba(95,139,255,.35); }
-    .composer {
-      display:flex; gap:10px;
-      padding: 12px;
-      border-top: 1px solid rgba(37,48,88,.8);
-      align-items:center;
-    }
-    textarea {
-      flex:1;
-      resize:none;
-      height: 44px;
-      padding: 10px 12px;
-      border-radius: 12px;
-      border: 1px solid rgba(37,48,88,.9);
-      outline:none;
-      background: rgba(11,16,32,.65);
-      color: var(--text);
-    }
-    .status { padding: 0 12px 12px; color: var(--muted); font-size: 12px; }
-    code { background: rgba(255,255,255,.08); padding: 1px 6px; border-radius: 8px; }
-  </style>
+  <title>UTD AI Campus Assistant</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
 </head>
-
 <body>
-  <div class="wrap">
-    <div class="header">
-  <div style="display:flex; align-items:center; gap:14px;">
-    <img
-      src="utd-logo.jpg"
-      alt="UTD Logo"
-      style="height:48px; width:auto; border-radius:6px;"
-    />
-    <div class="title">
-      <h1>AI Campus Assistant</h1>
-      <div class="sub">Richardson, Dallas, Texas</div>
-    </div>
-  </div>
-</div>
+  <main class="page">
+    <div class="bg-gradient"></div>
 
-    <div class="card">
-      <div class="bar">
-        <div style="color: var(--muted); font-size: 13px;">
-          <!-- API: <code id="apiLabel"></code> -->
+    <section class="container">
+      <header class="brand-card">
+        <div class="brand-left">
+          <img src="utd-logo.jpg" alt="UTD logo" class="brand-logo" />
+          <div>
+            <h1>AI Campus Assistant</h1>
+            <p>Richardson, Dallas, Texas</p>
+          </div>
         </div>
-        <div style="display:flex; gap:10px;">
-          <button class="btn" id="clearBtn">Clear</button>
+      </header>
+
+      <section class="chat-card" aria-label="UTD chatbot">
+        <div class="chat-toolbar">
+          <span id="statusText" class="status">Ready</span>
+          <button class="btn btn-secondary" id="clearBtn" type="button">Clear</button>
         </div>
-      </div>
 
-      <div class="chat" id="chat"></div>
+        <div class="chat-body">
+          <div class="prompt-group" id="promptGroup">
+            <p class="prompt-label">Try one of these:</p>
+            <div class="chip-row">
+              <button type="button" class="chip" data-prompt="Where can I get vegetarian lunch near ECSS?">Dining near ECSS</button>
+              <button type="button" class="chip" data-prompt="What events are happening today?">Events today</button>
+              <button type="button" class="chip" data-prompt="Where can I park near ECSW?">Parking near ECSW</button>
+            </div>
+          </div>
 
-      <div class="composer">
-        <textarea id="input" placeholder="Type a message… (Enter to send, Shift+Enter for new line)"></textarea>
-        <button class="btn primary" id="sendBtn">Send</button>
-      </div>
+          <div id="chat" class="chat-log" aria-live="polite"></div>
+        </div>
 
-      <div class="status" id="status">
-        <!-- Sends <code>{"message":"..."}</code> to <code>/chat</code>. -->
-      </div>
-    </div>
-  </div>
-<footer style="
-  margin-top: 32px;
-  padding: 20px 0;
-  text-align: center;
-  color: rgba(233,238,255,0.6);
-">
-  <a
-    href="https://github.com/Sinmisworld/utd-aws-cloud-club-ai-campus-assistant"
-    target="_blank"
-    rel="noopener noreferrer"
-    style="
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      text-decoration: none;
-      color: inherit;
-    "
-  >
-    <!-- GitHub SVG -->
-    <svg
-      height="24"
-      width="24"
-      viewBox="0 0 16 16"
-      fill="currentColor"
-      aria-hidden="true"
-    >
-      <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38
-      0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01
-      1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95
-      0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18
-      1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82
-      2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82
-      2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54
-      1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013
-      8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
-    </svg>
+        <form class="composer" id="composerForm">
+          <label for="messageInput" class="sr-only">Message</label>
+          <textarea id="messageInput" placeholder="Ask about events, dining, parking, classes..." rows="1"></textarea>
+          <button class="btn btn-primary" id="sendBtn" type="submit">Send</button>
+        </form>
+      </section>
 
-    <span style="font-size: 14px;">
-      UTD AWS Cloud Club
-    </span>
-  </a>
-</footer>
+      <footer class="footer">
+        <a
+          href="https://github.com/Sinmisworld/utd-aws-cloud-club-ai-campus-assistant"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          UTD AWS Cloud Club
+        </a>
+      </footer>
+    </section>
+  </main>
 
-<script>
-  // Hardcoded API Gateway base (REST API with stage = /prod)
-  // ****************************** API changes here ****************************************
-  const API_BASE = "https://k8s474cafh.execute-api.us-east-1.amazonaws.com/prod";
-
-  const chatEl = document.getElementById("chat");
-  const inputEl = document.getElementById("input");
-  const statusEl = document.getElementById("status");
-  document.getElementById("apiLabel").textContent = API_BASE;
-
-  function setStatus(msg) { statusEl.textContent = msg; }
-
-  function addMessage(role, text) {
-    const row = document.createElement("div");
-    row.className = "msg " + (role === "user" ? "me" : "bot");
-
-    const bubble = document.createElement("div");
-    bubble.className = "bubble";
-    bubble.textContent = text;
-
-    row.appendChild(bubble);
-    chatEl.appendChild(row);
-    chatEl.scrollTop = chatEl.scrollHeight;
-  }
-
-  async function postChat(userText) {
-    const url = API_BASE.replace(/\/$/, "") + "/chat";
-
-    const resp = await fetch(url, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      //  request shape you want
-      body: JSON.stringify({ message: userText })
-    });
-
-    const raw = await resp.text();
-    let data;
-    try { data = JSON.parse(raw); } catch { data = { raw }; }
-
-    if (!resp.ok) {
-      const errMsg = data?.message || data?.error || raw || ("HTTP " + resp.status);
-      throw new Error(errMsg);
-    }
-    if (data.body) {
-    try {
-        const inner = JSON.parse(data.body);
-        return inner.answer ?? JSON.stringify(inner);
-    } catch {
-        return data.body;
-    }
-    }
-
-    // fallback (if you later return direct JSON)
-    return data.answer ?? data.reply ?? data.response ?? JSON.stringify(data);
-
-    // prefer {answer: "..."} but keep fallbacks
-   
-  }
-
-  async function send() {
-    const msg = inputEl.value.trim();
-    if (!msg) return;
-
-    addMessage("user", msg);
-    inputEl.value = "";
-    setStatus("Thinking...");
-    addMessage("assistant", "…");
-
-    try {
-      const answer = await postChat(msg);
-      const bubbles = chatEl.querySelectorAll(".bubble");
-      bubbles[bubbles.length - 1].textContent = answer;
-      setStatus("Done.");
-    } catch (e) {
-      const bubbles = chatEl.querySelectorAll(".bubble");
-      bubbles[bubbles.length - 1].textContent = "Error: " + (e?.message || String(e));
-      setStatus("Request failed (most likely CORS or wrong route).");
-    }
-  }
-
-  document.getElementById("sendBtn").onclick = send;
-
-  document.getElementById("clearBtn").onclick = () => {
-    chatEl.innerHTML = "";
-    setStatus("Cleared chat.");
-  };
-
-  document.getElementById("pingBtn").onclick = async () => {
-    setStatus("Pinging /health ...");
-    try {
-      const resp = await fetch(API_BASE.replace(/\/$/, "") + "/health", { method: "GET" });
-      const t = await resp.text();
-      setStatus("Ping status: HTTP " + resp.status);
-      addMessage("assistant", "Ping /health:\n" + t);
-    } catch (e) {
-      setStatus("Ping failed (CORS or endpoint).");
-      addMessage("assistant", "Ping error: " + (e?.message || String(e)));
-    }
-  };
-
-  inputEl.addEventListener("keydown", (e) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      send();
-    }
-  });
-
-  addMessage("assistant", "Hi! Ask me anything about UTD courses/careers.");
-</script>
+  <script src="app.js"></script>
 </body>
 </html>
