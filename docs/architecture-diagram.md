@@ -24,7 +24,6 @@ flowchart LR
     F --> G["Amazon S3<br/>dining/events/parking JSON"]
     E --> H["LLM Inference"]
     H --> H1["Claude (Inference Profile)"]
-    H --> H2["Gemma (Foundation Model)"]
     D --> I["CloudWatch Logs"]
     D --> B
 ```
