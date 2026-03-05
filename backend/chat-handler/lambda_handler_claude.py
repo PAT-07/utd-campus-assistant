@@ -25,7 +25,23 @@ TEMPERATURE = float(os.environ.get("TEMPERATURE", "0.2"))
 ALLOW_ORIGIN = os.environ.get("ALLOW_ORIGIN", "*")
 
 # Prompt template used for response generation.
+
+ORCHESTRATION_PROMPT = """
+    You are orchestrating retrieval for the UTD Campus Assistant.
+    Conversation History:
+    $conversation_history$
+
+    Instructions for generation:
+    $output_format_instructions$
+
+    User Question:
+    $query$
+"""
+
 GENERATION_PROMPT = """
+    Search Results
+    $search_results$
+
     You are the UTD Campus Assistant.
 
     Use ONLY the retrieved knowledge-base content to answer.
@@ -68,6 +84,20 @@ def lambda_handler(event, context):
         if not MODEL_ARN:
             return _response(500, {"error": "Missing MODEL_ARN environment variable"})
 
+        orchestration_configuration = {
+            "promptTemplate": {"textPromptTemplate": ORCHESTRATION_PROMPT}
+        }
+
+        generation_configuration = {
+            "promptTemplate": {"textPromptTemplate": GENERATION_PROMPT},
+            "inferenceConfig": {
+                "textInferenceConfig": {
+                    "maxTokens": MAX_TOKENS,
+                    "temperature": TEMPERATURE,
+                }
+            },
+        }
+
         rag_response = bedrock_agent.retrieve_and_generate(
             input={"text": user_message},
             retrieveAndGenerateConfiguration={
@@ -75,22 +105,16 @@ def lambda_handler(event, context):
                 "knowledgeBaseConfiguration": {
                     "knowledgeBaseId": KNOWLEDGE_BASE_ID,
                     "modelArn": MODEL_ARN,
-                    "generationConfiguration": {
-                        "promptTemplate": {"textPromptTemplate": GENERATION_PROMPT},
-                        "inferenceConfig": {
-                            "textInferenceConfig": {
-                                "maxTokens": MAX_TOKENS,
-                                "temperature": TEMPERATURE,
-                            }
-                        },
-                    },
+                    "orchestrationConfiguration": orchestration_configuration,
+                    "generationConfiguration": generation_configuration,
                 },
             },
         )
 
         answer = rag_response["output"]["text"]
         return _response(
-            200, {"raw_response": answer, "parsed_response": [{"text": answer}]}
+            200,
+            {"body": {"raw_response": answer, "parsed_response": [{"text": answer}]}},
         )
     except Exception as exc:
         return _response(500, {"error": str(exc)})
