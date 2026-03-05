@@ -1,4 +1,5 @@
 # UTD AWS Cloud Club – AI Campus Assistant
+
 This repo contains the code and infrastructure for the **AI-powered UTD Campus Assistant** we’re building for the AWS Cloud Club workshop.
 
 The goal is a **working, teachable demo** that shows how to connect:
