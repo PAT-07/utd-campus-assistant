@@ -3,7 +3,7 @@
 // ---------------------------------------------------------------------------
 // API Gateway endpoint for your deployed backend.
 // const API_URL = "<API_GATEWAY_ENDPOINT>/<STAGE>/askutd";
-const API_URL = "";
+const API_URL = "https://sisk5qykpl.execute-api.us-east-1.amazonaws.com/dev1/askutd";
 
 const chatEl = document.getElementById("chat");
 const messageInputEl = document.getElementById("messageInput");
