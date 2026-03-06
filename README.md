@@ -1,98 +1,119 @@
-# UTD AWS Cloud Club – AI Campus Assistant
+# UTD AI Campus Assistant 🚀
 
-This repo contains the code and infrastructure for the **AI-powered UTD Campus Assistant** we’re building for the AWS Cloud Club workshop.
+An AI-powered campus assistant that helps students find information about dining, events, parking, and campus services at the University of Texas at Dallas.
 
-The goal is a **working, teachable demo** that shows how to connect:
+This project demonstrates how to build a **serverless AI application on AWS** using Amazon Bedrock, Lambda, and API Gateway.
 
-- **Frontend** → web chatbot UI (S3 static site)
-- **Backend** → API Gateway + Lambda
-- **AI** → Amazon Bedrock (Claude 3.5 Sonnet)
-- **Data** → Mock dining, events, and parking data (S3 or DynamoDB)
-- **Infra** → Terraform or CDK to deploy everything
+---
 
-We are targeting **three main intents**:
+## 🧠 Architecture Overview
 
-1. Dining options (with simple dietary filters)
-2. Events today/tomorrow
-3. Parking status (mocked data)
+The application follows a simple **AI + Serverless architecture**:
 
-## Repo Structure
+User → Web Chat UI → API Gateway → Lambda → Amazon Bedrock → Knowledge Base → Response
 
-- `frontend/` – Web chat UI (Frontend/UI Team)
-- `backend/` – Chat handler + Lambda tools for dining/events/parking (Backend/API Team)
-- `data-storage/` – Sample datasets & DynamoDB design (Data/Storage Team)
-- `infra-deploy/` – Terraform + scripts to deploy stack (Infra & Deployment Team)
-- `docs/` – Architecture, task breakdown, and workshop notes
+### AWS Services Used
 
-## Teams
+* Amazon Bedrock – AI model inference
+* AWS Lambda – Serverless backend logic
+* Amazon API Gateway – REST API for the chatbot
+* Amazon S3 – Static frontend hosting and datasets
+* Amazon CloudWatch – Logging and monitoring
 
-### 1. Frontend/UI Team (2–3)
+---
 
-**Folder:** `frontend/`
+## 💬 Features
 
-- Build a **single-page chat interface** (input, send button, chat bubbles).
-- Call the `/chat` API endpoint exposed by API Gateway.
-- Host static site on **S3** (CloudFront optional).
-- Keep styling simple and readable (UTD colors if possible).
+The assistant can answer questions related to campus life such as:
 
-### 2. Backend/API Team (2–3)
+* Dining options and dietary preferences
+* Events happening today or tomorrow
+* Parking availability near campus buildings
 
-**Folder:** `backend/`
+Example queries:
 
-- Implement a `chat-handler` Lambda:
-  - Input: `{ "message": "Where can I park near ECSW?" }`
-  - Calls **Bedrock** (Claude 3.5) with system prompt + tool schemas.
-  - Routes to one of three tool Lambdas:
-    - `DiningTool` – reads dining data.
-    - `EventsTool` – reads event data.
-    - `ParkingTool` – reads parking data.
-  - Returns a structured response for the frontend to render.
-- Keep everything as simple Python functions.
+* "Where can I get vegetarian lunch near ECSS?"
+* "What events are happening today?"
+* "Where can I park near ECSW?"
 
-### 3. Data/Storage Team (2–3)
+---
 
-**Folder:** `data-storage/`
+## 🏗 Project Structure
 
-- Create **sample data**:
-  - `dining.json`
-  - `events.json`
-  - `parking.json`
-- Decide whether we store them in **S3** only (simpler) or **DynamoDB**.
-- Document any DynamoDB tables (key schema, example items).
+```
+utd-campus-assistant/
+│
+├── frontend/          # Chatbot UI (HTML, CSS, JavaScript)
+├── backend/           # Lambda functions and API logic
+├── data-storage/      # Sample campus datasets
+├── docs/              # Architecture and project documentation
+└── infra-deploy/      # Infrastructure scripts (Terraform/CDK)
+```
 
-### 4. Infra & Deployment Team (2–3)
+---
 
-**Folder:** `infra-deploy/`
+## ⚙️ How It Works
 
-- Use **Terraform** (or CDK) to define:
-  - S3 bucket (static site + data)
-  - API Gateway + Lambda functions
-  - IAM roles/policies
-- Provide **deploy** and **destroy** scripts.
-- Make it easy to spin this up in a single account for demo day.
+1. The user sends a message from the **web chatbot interface**.
+2. The request is sent to **Amazon API Gateway**.
+3. API Gateway triggers a **Lambda function**.
+4. The Lambda function calls **Amazon Bedrock** to process the query.
+5. Bedrock retrieves relevant campus information from the dataset.
+6. A response is returned to the chatbot UI.
 
-## Development Flow
+---
 
-All members develop in their **own AWS accounts**.  
-Final integration and deployment for the workshop happens in **one shared AWS account**.
+## 🚀 Running the Project Locally
 
-Basic flow:
+Clone the repository:
 
-1. Each team builds and tests in their own space.
-2. All changes merged into `main` branch.
-3. Infra team runs `deploy.sh` in the shared account to stand up the demo environment.
+```
+git clone https://github.com/YOUR_USERNAME/utd-campus-assistant.git
+cd utd-campus-assistant/frontend/public
+```
 
-## Minimum Demo Requirements
+Start a local server:
 
-For the workshop, we want to be able to:
+```
+python -m http.server 8080
+```
 
-1. Ask: “Where can I get vegetarian lunch near ECSS?”  
-   → See dining results from our dataset.
+Open in browser:
 
-2. Ask: “What events are happening today?”  
-   → See events filtered by today’s date.
+```
+http://localhost:8080
+```
 
-3. Ask: “Where can I park near ECSW?”  
-   → See mock parking lot availability.
+---
 
-If those three flows work end-to-end, we’re successful ✅
+## 📊 Example Architecture
+
+Frontend (Static Website)
+↓
+Amazon API Gateway
+↓
+AWS Lambda (Chat Handler)
+↓
+Amazon Bedrock Model
+↓
+Campus Knowledge Base
+
+---
+
+## 📚 Learning Goals
+
+This project demonstrates:
+
+* Building **AI applications with Amazon Bedrock**
+* Implementing **serverless backend architectures**
+* Integrating **frontend applications with cloud APIs**
+* Designing a simple **retrieval-based AI assistant**
+
+---
+
+## 👨‍💻 Author
+
+Pratyaksh Singh
+MS Information Technology Management – UT Dallas
+
+GitHub: https://github.com/PAT-07
